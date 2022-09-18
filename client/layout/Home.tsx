@@ -1,8 +1,13 @@
 import { AppShell, Box, Header, Navbar } from "@mantine/core";
 import React from "react";
 import Image from "next/image";
+import { useMe } from "../context/me";
+import Link from "next/link";
+import { Anchor } from "tabler-icons-react";
 
 function HomePageLayout({ children }: { children: React.ReactNode }) {
+  const { user, refetch } = useMe();
+
   return (
     <AppShell
       padding="md"
@@ -16,6 +21,18 @@ function HomePageLayout({ children }: { children: React.ReactNode }) {
           <Box>
             <Box>
               <Image src="/logo.png" alt="logo" width="100px" height="40px" />
+              {!user && (
+                <>
+                  <Link href="/auth/login" passHref>
+                    <Anchor>Login</Anchor>
+                  </Link>
+                  <Link href="/auth/register" passHref>
+                    <Anchor>Register</Anchor>
+                  </Link>
+                </>
+              )}
+
+              {user && <p>Upload a video</p>}
             </Box>
           </Box>
         </Header>
