@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import logger from "./logger";
 
 const DB_CONNECTION_STRING =
-  process.env.DB_CONNECTION_STRING || "mongodb://localhost:27017/youtube-clone";
+  "mongodb://mongo:pEhI12sBbF59TVdcCzY5@containers-us-west-39.railway.app:7471" ||
+  "mongodb://localhost:27017/youtube-clone";
 
 export async function connectToDatabse() {
   try {

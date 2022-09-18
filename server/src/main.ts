@@ -5,6 +5,7 @@ import { connectToDatabse, disconnectFromDatabase } from "./utils/database";
 import logger from "./utils/logger";
 import { CORS_ORIGIN } from "./constants";
 import helmet from "helmet";
+import userRoute from "./modules/user/user.route";
 
 const PORT = process.env.PORT || 4000;
 
@@ -20,9 +21,11 @@ app.use(
 );
 app.use(helmet()); // helmet - setting headers, hiding headers
 
+app.use("/api/users", userRoute);
+
 const server = app.listen(PORT, async () => {
   await connectToDatabse();
-  logger.info(`Srever listening at http://localhost${PORT}`);
+  logger.info(`Srever listening at http://localhost:${PORT}`);
 });
 
 const signals = ["SIGTERM", "SIGINT"];
