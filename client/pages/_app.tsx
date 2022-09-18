@@ -35,11 +35,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         theme={{ colorScheme: "light" }}
       >
         <NotificationsProvider>
-          {getLayout(
-            <main>
-              <Component {...pageProps} />
-            </main>
-          )}
+          <QueryClientProvider client={queryClient}>
+            {getLayout(
+              <main>
+                <Component {...pageProps} />
+              </main>
+            )}
+          </QueryClientProvider>
         </NotificationsProvider>
       </MantineProvider>
     </>
