@@ -15,7 +15,7 @@ export class Video {
   public extension: string;
 
   @prop({ required: true, ref: () => User })
-  public ownder: Ref<User>;
+  public owner: Ref<User>;
 
   @prop({ unique: true, default: () => nanoid() })
   public videoId: string;
