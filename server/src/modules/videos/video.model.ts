@@ -24,7 +24,7 @@ export class Video {
   public published: boolean;
 }
 
-const VideoModel = getModelForClass(Video, {
+export const VideoModel = getModelForClass(Video, {
   schemaOptions: {
     timestamps: true,
   },
