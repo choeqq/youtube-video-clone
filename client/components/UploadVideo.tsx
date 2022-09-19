@@ -14,6 +14,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useMutation } from "react-query";
 import { ArrowBigUpLine } from "tabler-icons-react";
+import { useVideo } from "../context/videos";
 import { updateVideo, uploadVideo } from "../pages/api";
 import { Video } from "../types";
 
@@ -24,6 +25,8 @@ function EditVideoForm({
   videoId: string;
   setOpened: Dispatch<SetStateAction<boolean>>;
 }) {
+  const { refetch } = useVideo();
+
   const form = useForm({
     initialValues: {
       title: "",
@@ -39,6 +42,7 @@ function EditVideoForm({
     {
       onSuccess: () => {
         setOpened(false);
+        refetch();
       },
     }
   );
