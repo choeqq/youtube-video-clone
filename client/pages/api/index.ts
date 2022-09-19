@@ -49,3 +49,17 @@ export function uploadVideo({
     })
     .then((res) => res.data);
 }
+
+export function updateVideo({
+  videoId,
+  ...payload
+}: {
+  videoId: string;
+  title: string;
+  description: string;
+  published: boolean;
+}) {
+  return axios.patch(`${videosBase}/${videoId}`, payload, {
+    withCredentials: true,
+  });
+}

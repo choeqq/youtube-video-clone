@@ -1,9 +1,73 @@
-import { Button, Group, Modal, Progress, Text } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Modal,
+  Progress,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
-import { useState } from "react";
+import { useForm } from "@mantine/form";
+import { AxiosError, AxiosResponse } from "axios";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useMutation } from "react-query";
 import { ArrowBigUpLine } from "tabler-icons-react";
-import { uploadVideo } from "../pages/api";
+import { updateVideo, uploadVideo } from "../pages/api";
+import { Video } from "../types";
+
+function EditVideoForm({
+  videoId,
+  setOpened,
+}: {
+  videoId: string;
+  setOpened: Dispatch<SetStateAction<boolean>>;
+}) {
+  const form = useForm({
+    initialValues: {
+      title: "",
+      description: "",
+      published: true,
+    },
+  });
+
+  type input = Parameters<typeof updateVideo>;
+
+  const mutation = useMutation<AxiosResponse<Video>, AxiosError, input["0"]>(
+    updateVideo,
+    {
+      onSuccess: () => {
+        setOpened(false);
+      },
+    }
+  );
+
+  return (
+    <form
+      onSubmit={form.onSubmit((values) =>
+        mutation.mutate({ videoId, ...values })
+      )}
+    >
+      <Stack>
+        <TextInput
+          label="Title"
+          required
+          placeholder="My video"
+          {...form.getInputProps("title")}
+        />
+        <TextInput
+          label="Description"
+          required
+          {...form.getInputProps("description")}
+        />
+
+        <Switch label="Published" {...form.getInputProps("published")} />
+        <Button type="submit">Save</Button>
+      </Stack>
+    </form>
+  );
+}
 
 function UploadVideo() {
   const [opened, setOpened] = useState(false);
@@ -66,6 +130,13 @@ function UploadVideo() {
         )}
         {progress > 0 && (
           <Progress size="xl" label={`${progress}`} value={progress} mb="xl" />
+        )}
+
+        {mutation.data && (
+          <EditVideoForm
+            videoId={mutation.data.videoId}
+            setOpened={setOpened}
+          />
         )}
       </Modal>
       <Button onClick={() => setOpened(true)}>Upload Video</Button>
