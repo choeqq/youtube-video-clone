@@ -26,7 +26,6 @@ function EditVideoForm({
   setOpened: Dispatch<SetStateAction<boolean>>;
 }) {
   const { refetch } = useVideo();
-
   const form = useForm({
     initialValues: {
       title: "",
@@ -35,9 +34,9 @@ function EditVideoForm({
     },
   });
 
-  type input = Parameters<typeof updateVideo>;
+  type input = Parameters<typeof updateVideo>["0"];
 
-  const mutation = useMutation<AxiosResponse<Video>, AxiosError, input["0"]>(
+  const mutation = useMutation<AxiosResponse<Video>, AxiosError, input>(
     updateVideo,
     {
       onSuccess: () => {
@@ -60,6 +59,7 @@ function EditVideoForm({
           placeholder="My video"
           {...form.getInputProps("title")}
         />
+
         <TextInput
           label="Description"
           required
@@ -72,7 +72,6 @@ function EditVideoForm({
     </form>
   );
 }
-
 function UploadVideo() {
   const [opened, setOpened] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -100,9 +99,9 @@ function UploadVideo() {
   return (
     <>
       <Modal
-        opened={opened}
         closeOnClickOutside={false}
         onClose={() => setOpened(false)}
+        opened={opened}
         title="Upload video"
         size="xl"
       >
@@ -114,36 +113,34 @@ function UploadVideo() {
             accept={[MIME_TYPES.mp4]}
             multiple={false}
           >
-            {(status) => {
-              return (
-                <Group
-                  position="center"
-                  spacing="xl"
-                  direction="column"
-                  style={{
-                    minHeight: "50vh",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ArrowBigUpLine />
-                  <Text>Drag video here or click to find</Text>
-                </Group>
-              );
-            }}
+            <Group
+              position="center"
+              spacing="xl"
+              style={{
+                minHeight: "50vh",
+                justifyContent: "center",
+              }}
+              dir="column"
+            >
+              <ArrowBigUpLine />
+              <Text>Drag video here or click to find</Text>
+            </Group>
           </Dropzone>
         )}
+
         {progress > 0 && (
-          <Progress size="xl" label={`${progress}`} value={progress} mb="xl" />
+          <Progress size="xl" label={`${progress}%`} value={progress} mb="xl" />
         )}
 
         {mutation.data && (
           <EditVideoForm
-            videoId={mutation.data.videoId}
             setOpened={setOpened}
+            videoId={mutation.data.videoId}
           />
         )}
       </Modal>
-      <Button onClick={() => setOpened(true)}>Upload Video</Button>
+
+      <Button onClick={() => setOpened(true)}>Upload video</Button>
     </>
   );
 }
